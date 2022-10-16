@@ -19,11 +19,11 @@ public class Buttons extends JFrame {
     public Buttons() throws HeadlessException {
         super("Test"); //title
 
-        //lab1.Buttons handel
+        ///buttons handel
         handelBtn(btn1);
         handelBtn(btn2);
 
-        //Panel
+        ///panel
         JPanel panel = new JPanel();
         panel.add(btn1);
         panel.add(btn2);
