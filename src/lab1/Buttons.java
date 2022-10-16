@@ -1,3 +1,5 @@
+package lab1;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,7 +19,7 @@ public class Buttons extends JFrame {
     public Buttons() throws HeadlessException {
         super("Test"); //title
 
-        //Buttons handel
+        //lab1.Buttons handel
         handelBtn(btn1);
         handelBtn(btn2);
 
