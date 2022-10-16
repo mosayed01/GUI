@@ -45,6 +45,9 @@ public class Buttons extends JFrame {
         btn.setSize(40,30);
     }
 
+    /**
+     * entry point for run the frame
+     */
     public static void main(String[] args) {
         new Buttons();
     }
