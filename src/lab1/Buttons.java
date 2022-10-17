@@ -27,6 +27,7 @@ public class Buttons extends JFrame {
         JPanel panel = new JPanel();
         panel.add(btn1);
         panel.add(btn2);
+        panel.setBackground(Color.CYAN);  ///background color of the panel
 
         add(panel, BorderLayout.SOUTH);
 
