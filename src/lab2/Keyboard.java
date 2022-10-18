@@ -12,7 +12,7 @@ import java.awt.event.KeyListener;
 
 public class Keyboard extends JFrame implements KeyListener, ActionListener {
     ///text area
-    private static JTextArea _textArea;
+    private static JTextArea textArea;
     private static JScrollPane textPane;
     private static final JButton[] buttons = new JButton[57];
     private static final JPanel keyHolder = new JPanel(new BorderLayout(5, 5));
@@ -25,8 +25,8 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
         super("Keyboard");
 
         ///text area
-        _textArea = new JTextArea("");
-        textPane = new JScrollPane(_textArea);
+        textArea = new JTextArea("");
+        textPane = new JScrollPane(textArea);
         ///margin
         textPane.setBorder(new EmptyBorder(10, 10, 1, 10));
 //        keyHolder.setBorder(new EmptyBorder(1,1,5,1));
@@ -41,6 +41,7 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
         setSize(700, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
+        setLocationRelativeTo(null);  //center
         setVisible(true);
     }
 
@@ -104,45 +105,43 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!(e.getSource() instanceof JButton)) return;
+        if (!(e.getSource() instanceof JButton btn)) return;
 
 //        System.out.println(((JButton)e.getSource()).getText());
-        JButton btn = ((JButton) e.getSource());
         String text = btn.getText();
 
         switch (text) {
             case "Backspace" -> { ///from https://stackoverflow.com/questions/25319104/jtextarea-backspace-and-clear
                 try {
-                    Document doc = _textArea.getDocument();
+                    Document doc = textArea.getDocument();
                     if (doc.getLength() > 0) {
                         doc.remove(doc.getLength() - 1, 1);
                     }
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }
+//                _textArea.setText(_textArea.getText().replace(_textArea.getSelectedText(),""));
             }
             case "CapsLock" -> {
                 capsFlag = !capsFlag;
 
-                if (capsFlag) {
+                if (capsFlag)
                     btn.setBackground(Color.darkGray);
-                } else {
+                else
                     btn.setBackground(Color.lightGray);
-                }
             }
             case "Enter" -> {
-
+                textArea.append("\n");
             }
             case "Shift" -> {
 
             }
             case "                                     " -> {
-
+                textArea.append(" ");
             }
             case "Left" -> {
 
@@ -156,8 +155,12 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
             case "Down" -> {
 
             }
+            default -> {
+                if (capsFlag)
+                    textArea.append(text.toUpperCase());
+                else
+                    textArea.append(text);
+            }
         }
-
-
     }
 }
