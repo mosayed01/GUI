@@ -15,9 +15,10 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
     ///text area
     private static JTextArea textArea;
     private static final JButton[] buttons = new JButton[KEYS_SIZE];
-    private static final JPanel keyHolder = new JPanel(new BorderLayout(8,8));
+    private static final JPanel keyHolder = new JPanel(new BorderLayout(8, 8));
     private static final JPanel innerKeyHolder1 = new JPanel();
     private static final JPanel innerKeyHolder2 = new JPanel();
+    private static final JPanel arrowsKeyHolder = new JPanel(new BorderLayout(3, 3));
     private static boolean capsFlag;
 
 
@@ -37,7 +38,7 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
         add(keyHolder);
 
         ////////////////E//////////////////////
-        setSize(720, 400);
+        setSize(720, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);  //center
@@ -47,7 +48,7 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
     private void handleButtons() {
 
 
-        String helper = "~1234567890-+AAqwertyuiop[]Aasdfghjkl;'AAzxcvbnm,./AAAAA";
+        String helper = "~1234567890-+AAqwertyuiop[]Aasdfghjkl;'AzAxcvbnm,./AAAAA";
 //        System.out.println(helper.length()); // 56
 //              13 14 27 39 40 51 52 53 54 55
         for (int i = 0; i < KEYS_SIZE; i++) {
@@ -58,13 +59,28 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
                 if (i == 13) buttons[i].setText("Backspace");
                 if (i == 14) buttons[i].setText("CapsLock");
                 if (i == 27) buttons[i].setText("Enter");
-                if (i == 39) buttons[i].setText("Shift");
-                if (i == 40) buttons[i].setText("/");
-                if (i == 51) buttons[i].setText("                                           ");
-                if (i == 52) buttons[i].setText("Left");
-                if (i == 53) buttons[i].setText("Up");
-                if (i == 54) buttons[i].setText("Right");
-                if (i == 55) buttons[i].setText("Down");
+                if (i == 39) buttons[i].setText("\\");
+                if (i == 41) buttons[i].setText("        Shift        ");
+                if (i == 51) {
+                    buttons[i].setText("                                           ");
+                    innerKeyHolder1.add(buttons[i]);
+                }
+                if (i == 52) {
+                    buttons[i].setText("Left");
+                    arrowsKeyHolder.add(buttons[i], BorderLayout.WEST);
+                }
+                if (i == 53) {
+                    buttons[i].setText("Up");
+                    arrowsKeyHolder.add(buttons[i], BorderLayout.NORTH);
+                }
+                if (i == 54) {
+                    buttons[i].setText("Right");
+                    arrowsKeyHolder.add(buttons[i], BorderLayout.EAST);
+                }
+                if (i == 55) {
+                    buttons[i].setText("Down");
+                    arrowsKeyHolder.add(buttons[i], BorderLayout.SOUTH);
+                }
             } else {
                 buttons[i].setText(helper.charAt(i) + "");
             }
@@ -72,9 +88,7 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
             buttons[i].addActionListener(this); ///action listen
             buttons[i].setFocusable(false);
 
-            if (i >= 51)
-                innerKeyHolder1.add(buttons[i]);
-            else
+            if (i < 51)
                 innerKeyHolder2.add(buttons[i]);
 
             //handel def color
@@ -82,8 +96,10 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
             buttons[i].setForeground(Color.white);
         }
         keyHolder.add(innerKeyHolder2, BorderLayout.CENTER);
-        keyHolder.add(innerKeyHolder1, BorderLayout.SOUTH);
-
+        JPanel helperPanel = new JPanel();
+        helperPanel.add(innerKeyHolder1);
+        helperPanel.add(arrowsKeyHolder);
+        keyHolder.add(helperPanel, BorderLayout.SOUTH);
     }
 
     public static void main(String[] args) {
@@ -134,7 +150,7 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
                     btn.setBackground(Color.lightGray);
             }
             case "Enter" -> textArea.append("\n");
-            case "Shift" -> {
+            case "        Shift        " -> {
                 // TODO: Shift action
             }
             case "                                           " -> textArea.append(" ");
