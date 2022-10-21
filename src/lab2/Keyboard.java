@@ -12,14 +12,24 @@ import java.awt.event.KeyListener;
 
 public class Keyboard extends JFrame implements KeyListener, ActionListener {
     private static final int KEYS_SIZE = 56;
+    private static final String BACKSPACE = "BackSpace";
+    private static final String CAPSLOCK = "CapsLock";
+    private static final String ENTER = "Enter";
+    private static final String BACKSLASH = "\\";
+    private static final String SHIFT = "        Shift        ";
+    private static final String SPACE = "                                           ";
+    private static final String LEFT = "Left";
+    private static final String UP = "Up";
+    private static final String DOWN = "Down";
+    private static final String RIGHT = "Right";
     ///text area
     private static JTextArea textArea;
+    private static boolean capsFlag;
     private static final JButton[] buttons = new JButton[KEYS_SIZE];
     private static final JPanel keyHolder = new JPanel(new BorderLayout(8, 8));
     private static final JPanel innerKeyHolder1 = new JPanel();
     private static final JPanel innerKeyHolder2 = new JPanel();
     private static final JPanel arrowsKeyHolder = new JPanel(new BorderLayout(3, 3));
-    private static boolean capsFlag;
 
 
     public Keyboard() {
@@ -27,6 +37,7 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
 
         ///text area
         textArea = new JTextArea("");
+        textArea.setFocusable(false);
         JScrollPane textPane = new JScrollPane(textArea);
         ///margin
         textPane.setBorder(new EmptyBorder(16, 16, 1, 16));
@@ -36,6 +47,7 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
         add(textPane);
         handleButtons();
         add(keyHolder);
+        addKeyListener(this);
 
         ////////////////E//////////////////////
         setSize(720, 500);
@@ -56,29 +68,29 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
             buttons[i] = new JButton();
 
             if (helper.charAt(i) == 'A') {
-                if (i == 13) buttons[i].setText("Backspace");
-                if (i == 14) buttons[i].setText("CapsLock");
-                if (i == 27) buttons[i].setText("Enter");
-                if (i == 39) buttons[i].setText("\\");
-                if (i == 41) buttons[i].setText("        Shift        ");
+                if (i == 13) buttons[i].setText(BACKSPACE);
+                if (i == 14) buttons[i].setText(CAPSLOCK);
+                if (i == 27) buttons[i].setText(ENTER);
+                if (i == 39) buttons[i].setText(BACKSLASH);
+                if (i == 41) buttons[i].setText(SHIFT);
                 if (i == 51) {
-                    buttons[i].setText("                                           ");
+                    buttons[i].setText(SPACE);
                     innerKeyHolder1.add(buttons[i]);
                 }
                 if (i == 52) {
-                    buttons[i].setText("Left");
+                    buttons[i].setText(LEFT);
                     arrowsKeyHolder.add(buttons[i], BorderLayout.WEST);
                 }
                 if (i == 53) {
-                    buttons[i].setText("Up");
+                    buttons[i].setText(UP);
                     arrowsKeyHolder.add(buttons[i], BorderLayout.NORTH);
                 }
                 if (i == 54) {
-                    buttons[i].setText("Right");
+                    buttons[i].setText(RIGHT);
                     arrowsKeyHolder.add(buttons[i], BorderLayout.EAST);
                 }
                 if (i == 55) {
-                    buttons[i].setText("Down");
+                    buttons[i].setText(DOWN);
                     arrowsKeyHolder.add(buttons[i], BorderLayout.SOUTH);
                 }
             } else {
@@ -106,31 +118,42 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
         new Keyboard();
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-//        System.out.println(((JButton) e.getSource()).getText());
-
-    }
 
     @Override
     public void keyPressed(KeyEvent e) {
-//        System.out.println(((JButton) e.getSource()).getText());
+        String keyText = String.valueOf(e.getKeyChar());
 
+        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) keyText = BACKSPACE;
+        if (e.getKeyCode() == KeyEvent.VK_CAPS_LOCK) keyText = CAPSLOCK;
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) keyText = ENTER;
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) keyText = SPACE;
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) keyText = SHIFT;
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) keyText = LEFT;
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) keyText = RIGHT;
+        if (e.getKeyCode() == KeyEvent.VK_UP) keyText = UP;
+        if (e.getKeyCode() == KeyEvent.VK_DOWN) keyText = DOWN;
+
+        JButton btnKey = getButtonFromText(keyText);
+
+        if (btnKey != null)
+            btnKey.doClick();
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
+    private JButton getButtonFromText(String text) {
+        for (JButton btn: buttons) {
+            if (btn.getText().equalsIgnoreCase(text))
+                return btn;
+        } return null;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!(e.getSource() instanceof JButton btn)) return;
 
-//        System.out.println(((JButton)e.getSource()).getText());
         String textBtn = btn.getText();
 
         switch (textBtn) {
-            case "Backspace" -> { /// from https://stackoverflow.com/questions/25319104/jtextarea-backspace-and-clear
+            case BACKSPACE -> { /// from https://stackoverflow.com/questions/25319104/jtextarea-backspace-and-clear
                 try {
                     Document doc = textArea.getDocument();
                     if (doc.getLength() > 0) {
@@ -139,9 +162,8 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
                 } catch (BadLocationException ex) {
                     ex.printStackTrace();
                 }
-//                _textArea.setText(_textArea.getText().replace(_textArea.getSelectedText(),""));
             }
-            case "CapsLock" -> {
+            case CAPSLOCK -> {
                 capsFlag = !capsFlag;
 
                 if (capsFlag)
@@ -149,21 +171,21 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
                 else
                     btn.setBackground(Color.lightGray);
             }
-            case "Enter" -> textArea.append("\n");
-            case "        Shift        " -> {
+            case ENTER -> textArea.append("\n");
+            case SHIFT -> {
                 // TODO: Shift action
             }
-            case "                                           " -> textArea.append(" ");
-            case "Left" -> {
+            case SPACE -> textArea.append(" ");
+            case LEFT -> {
                 // TODO: left action
             }
-            case "Up" -> {
+            case UP -> {
                 // TODO: up action
             }
-            case "Right" -> {
+            case RIGHT -> {
                 // TODO: right action
             }
-            case "Down" -> {
+            case DOWN -> {
                 // TODO: down action
             }
             default -> {
@@ -173,5 +195,14 @@ public class Keyboard extends JFrame implements KeyListener, ActionListener {
                     textArea.append(textBtn);
             }
         }
+    }
+
+    // unused methods:
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }
